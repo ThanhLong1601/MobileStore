@@ -30,9 +30,15 @@ public class ProductController {
     }
 
     @GetMapping("/listAll")
-    public ResponseEntity<BaseResponse<List<ProductDto>>> getAllProducts(){
-        List<ProductDto> products = productService.getAllProducts();
-        return ResponseFactory.ok(products);
+    public ResponseEntity<BaseResponse<List<ProductDto>>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "4") int size,
+            @RequestParam(defaultValue = "id,asc") String[] sort
+    ){
+        Sort.Direction direction = Sort.Direction.fromString(sort[1]);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort[0]));
+        Page<ProductDto> productsPage = productService.getAllProducts(pageable);
+        return ResponseFactory.ok(productsPage.getContent());
     }
 
     @GetMapping("/{id}")

@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -40,11 +39,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> getAllProducts() {
-        return productRepository.findAll()
-                .stream()
-                .map(productMapper::toProductDTO)
-                .toList();
+    public Page<ProductDto> getAllProducts(Pageable pageable) {
+        Page<ProductEntity> productsPage = productRepository.findAll(pageable);
+        return productsPage.map(productMapper::toProductDTO);
     }
     @Override
     public ProductDetailDto getProductById(Integer id) {
