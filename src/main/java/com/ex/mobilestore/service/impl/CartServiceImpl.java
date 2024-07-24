@@ -43,6 +43,13 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    public CartDto getCartById(Integer cartId) {
+        CartEntity cartEntity = cartRepository.findById(cartId)
+                .orElseThrow(()-> new NotFoundException(cartId));
+        return cartMapper.toCartDTO(cartEntity);
+    }
+
+    @Override
     public CartDto removeProductFromCart(Integer productId) {
         UserEntity user = getCurrentUser();
         CartEntity cartEntity = findOrCreateCartByUserId(user.getId());

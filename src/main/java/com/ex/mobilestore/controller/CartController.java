@@ -6,6 +6,7 @@ import com.ex.mobilestore.dto.common.BaseResponse;
 import com.ex.mobilestore.exception.NotFoundException;
 import com.ex.mobilestore.service.CartService;
 import com.ex.mobilestore.utils.ResponseFactory;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,16 @@ public class CartController {
     public ResponseEntity<BaseResponse<List<CartDto>>> getAllCarts(){
         List<CartDto> carts = cartService.getAllCarts();
         return ResponseFactory.ok(carts);
+    }
+
+    @GetMapping("/{cartId}")
+    public ResponseEntity<BaseResponse<CartDto>> getCartById(@PathVariable Integer cartId){
+        try {
+            CartDto cartDto = cartService.getCartById(cartId);
+            return ResponseFactory.ok(cartDto);
+        }catch (NotFoundException e){
+            return ResponseFactory.error(null,AppConstant.ERROR_CODE,e.getMessage());
+        }
     }
 
 
